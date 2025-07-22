@@ -84,3 +84,67 @@ class PredictionManager:
 
         predicted_values = model.predict(X)
         return pd.Series(predicted_values, index=dataFrame.index)
+
+# --- Initialize DataManager ---
+data_manager = DataManager()
+
+# --- Dash App Setup ---
+app = dash.Dash(__name__)
+app.title = "Expense Tracker & Predictor"
+
+# --- Basic Inline Styles  ---
+card_style = {
+    'border': '1px solid #ddd',
+    'borderRadius': '8px',
+    'padding': '20px',
+    'marginBottom': '20px',
+    'boxShadow': '2px 2px 8px rgba(0,0,0,0.1)'
+}
+
+header_style = {
+    'backgroundColor': '#f8f8f8',
+    'padding': '10px 20px',
+    'borderBottom': '1px solid #eee',
+    'marginBottom': '15px',
+    'borderTopLeftRadius': '8px',
+    'borderTopRightRadius': '8px'
+}
+
+input_row_style = {
+    'display': 'flex',
+    'alignItems': 'center',
+    'marginBottom': '10px'
+}
+
+label_col_style = {
+    'flex': '1',
+    'paddingRight': '10px',
+    'fontWeight': 'bold'
+}
+
+input_col_style = {
+    'flex': '2'
+}
+
+button_style = {
+    'backgroundColor': '#007bff',
+    'color': 'white',
+    'padding': '10px 15px',
+    'border': 'none',
+    'borderRadius': '5px',
+    'cursor': 'pointer',
+    'marginTop': '15px'
+}
+
+alert_base_style = {
+    'padding': '10px',
+    'borderRadius': '5px',
+    'marginTop': '10px',
+    'textAlign': 'center'
+}
+
+alert_success_style = {**alert_base_style, 'backgroundColor': '#d4edda', 'color': '#155724', 'border': '1px solid #c3e6cb'}
+alert_danger_style = {**alert_base_style, 'backgroundColor': '#f8d7da', 'color': '#721c24', 'border': '1px solid #f5c6cb'}
+alert_info_style = {**alert_base_style, 'backgroundColor': '#d1ecf1', 'color': '#0c5460', 'border': '1px solid #bee5eb'}
+
+
