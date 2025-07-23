@@ -147,4 +147,130 @@ alert_success_style = {**alert_base_style, 'backgroundColor': '#d4edda', 'color'
 alert_danger_style = {**alert_base_style, 'backgroundColor': '#f8d7da', 'color': '#721c24', 'border': '1px solid #f5c6cb'}
 alert_info_style = {**alert_base_style, 'backgroundColor': '#d1ecf1', 'color': '#0c5460', 'border': '1px solid #bee5eb'}
 
+# --- Layout of the App ---
+app.layout = html.Div(style={'maxWidth': '900px', 'margin': 'auto', 'padding': '20px'}, children=[
+    html.H1("Expense Tracker & Predictor", style={'textAlign': 'center', 'marginBottom': '30px'}),
+
+    # Add New Expense Section
+    html.Div(style=card_style, children=[
+        html.Div(html.H3("Add New Expense"), style=header_style),
+        html.Div(style={'padding': '15px'}, children=[
+            html.Div(style=input_row_style, children=[
+                html.Div(html.Label("Date (YYYY-MM-DD):"), style=label_col_style),
+                html.Div(style=input_col_style, children=[
+                    dcc.DatePickerSingle(
+                        id='expense-date-picker',
+                        min_date_allowed=date(2020, 1, 1),
+                        max_date_allowed=date(2030, 12, 31),
+                        initial_visible_month=date.today(),
+                        date=str(date.today()),
+                        display_format='YYYY-MM-DD',
+                        style={'width': '100%'}
+                    )
+                ]),
+            ]),
+            html.Div(style=input_row_style, children=[
+                html.Div(html.Label("Category:"), style=label_col_style),
+                html.Div(style=input_col_style, children=[
+                    dcc.Dropdown(
+                        id='expense-category-dropdown',
+                        options=[
+                            {'label': 'Food', 'value': 'Food'},
+                            {'label': 'Transport', 'value': 'Transport'},
+                            {'label': 'Rent', 'value': 'Rent'},
+                            {'label': 'Utilities', 'value': 'Utilities'},
+                            {'label': 'Entertainment', 'value': 'Entertainment'},
+                            {'label': 'Education', 'value': 'Education'},
+                            {'label': 'Other', 'value': 'Other'}
+                        ],
+                        value='Food',
+                        clearable=False,
+                        style={'width': '100%'}
+                    )
+                ]),
+            ]),
+            html.Div(style=input_row_style, children=[
+                html.Div(html.Label("Amount:"), style=label_col_style),
+                html.Div(style=input_col_style, children=[
+                    dcc.Input(id='expense-amount-input', type='number', value=0.0, min=0.0, step=0.01,
+                              style={'width': '100%', 'padding': '8px'})
+                ]),
+            ]),
+            html.Button("Add Expense", id='add-expense-button', style=button_style),
+            html.Div(id='add-expense-output', style={'marginTop': '10px'})
+        ])
+    ]),
+
+    # Expenses Table Section
+    html.Div(style=card_style, children=[
+        html.Div(html.H3("Your Expenses"), style=header_style),
+        html.Div(style={'padding': '15px'}, children=[
+            dash.dash_table.DataTable(
+                id='expenses-table',
+                columns=[{"name": i, "id": i} for i in ["Date", "Category", "Amount"]],
+                # Data initialized as empty, will be populated on adding expenses
+                data=data_manager.get_data_frame().to_dict('records'),
+                sort_action="native",
+                filter_action="native",
+                page_size=10,
+                style_table={'overflowX': 'auto', 'border': '1px solid #eee'},
+                style_cell={'padding': '8px', 'textAlign': 'left'},
+                style_header={'backgroundColor': '#f2f2f2', 'fontWeight': 'bold'}
+            )
+        ])
+    ]),
+
+    # Expense Predictions Section
+    html.Div(style=card_style, children=[
+        html.Div(html.H3("Expense Predictions"), style=header_style),
+        html.Div(style={'padding': '15px'}, children=[
+            html.Div(style=input_row_style, children=[
+                html.Div(html.Label("Prediction Method:"), style=label_col_style),
+                html.Div(style=input_col_style, children=[
+                    dcc.Dropdown(
+                        id='prediction-method-dropdown',
+                        options=[
+                            {'label': 'Moving Average', 'value': 'moving_average'},
+                            {'label': 'Linear Regression', 'value': 'linear_regression'}
+                        ],
+                        value='moving_average',
+                        clearable=False,
+                        style={'width': '100%'}
+                    )
+                ]),
+            ]),
+            html.Div(style=input_row_style, children=[
+                html.Div(html.Label("Start Date:"), style=label_col_style),
+                html.Div(style=input_col_style, children=[
+                    dcc.DatePickerSingle(
+                        id='prediction-start-date-picker',
+                        min_date_allowed=date(2020, 1, 1),
+                        max_date_allowed=date(2030, 12, 31),
+                        initial_visible_month=date.today(),
+                        date=str(date.today().replace(day=1)),
+                        display_format='YYYY-MM-DD',
+                        style={'width': '100%'}
+                    )
+                ]),
+            ]),
+            html.Div(style=input_row_style, children=[
+                html.Div(html.Label("End Date:"), style=label_col_style),
+                html.Div(style=input_col_style, children=[
+                    dcc.DatePickerSingle(
+                        id='prediction-end-date-picker',
+                        min_date_allowed=date(2020, 1, 1),
+                        max_date_allowed=date(2030, 12, 31),
+                        initial_visible_month=date.today(),
+                        date=str(date.today()),
+                        display_format='YYYY-MM-DD',
+                        style={'width': '100%'}
+                    )
+                ]),
+            ]),
+            html.Button("Generate Prediction", id='generate-prediction-button', style=button_style),
+            html.Div(id='prediction-output', style={'marginTop': '10px'}),
+            dcc.Graph(id='prediction-graph', style={'marginTop': '20px'})
+        ])
+    ])
+])
 
